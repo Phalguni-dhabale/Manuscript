@@ -1,234 +1,204 @@
 # 📜 Historical Manuscript Layout Region Detection
-
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![OpenCV](https://img.shields.io/badge/OpenCV-4.8%2B-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3%2B-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![Flask](https://img.shields.io/badge/Flask-3.0%2B-000000?logo=flask&logoColor=white)](https://palletsprojects.com/p/flask/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-
-An end-to-end AI-powered computer vision pipeline to analyze digitized historical manuscripts and automatically segment and classify layout regions into 5 semantic categories:
-* 🔴 **`header`**: Running headers, section titles, chapter openings, folio numbers.
-* 🟡 **`footer`**: Catchwords, bottom margin notes, page numbering, signatures.
-* 🟢 **`main_text`**: Central manuscript body text blocks and lines.
-* 🟣 **`side_text`**: Marginalia, lateral annotations, side commentary along page borders.
-* 🟠 **`filler`**: Decorative illuminations, stamps, binding holes, page margins, non-text artifacts.
-
-Supports diverse manuscript substrates (**palm-leaf**, **birch bark**, **handmade paper**), multi-script layouts (Devanagari, Grantha, Nandinagari, Latin), and degraded document conditions (faded ink, uneven illumination, bleed-through, skew, and stains).
+### 🎓 AI & Computer Vision Final Year / Academic Project
 
 ---
 
-## 🏗️ Architecture & 2-Stage Hybrid AI Pipeline
+## 📌 1. Project Overview
+
+Historical manuscripts (written on palm leaves, handmade paper, or birch bark) are valuable cultural heritage assets. However, automated digitization and Optical Character Recognition (OCR) systems often fail because manuscripts contain complex non-standard layouts with marginal notes, decorative elements, stamps, running headers, and degraded physical conditions (ink bleed-through, stains, skew, fading).
+
+This project implements an **End-to-End Hybrid AI Computer Vision System** that automatically analyzes manuscript images, segments candidate text regions, and classifies them into **5 distinct layout categories**:
+1. 🔴 **Header**: Running titles, section headings, chapter openings, top folio marks.
+2. 🟡 **Footer**: Page numbers, catchwords, bottom margin notes, signatures.
+3. 🟢 **Main Text**: Primary body text blocks and text lines.
+4. 🟣 **Side Text**: Marginalia, lateral commentaries, side notes.
+5. 🟠 **Filler / Non-Text**: Stamps, decorative graphics, folio binding holes, marginal artifacts.
+
+---
+
+## 🎯 2. Project Objectives
+
+- **Automated Preprocessing**: Clean noisy, degraded, and skewed manuscript images using CLAHE, Bilateral Denoising, Hough Deskewing, and Sauvola thresholding.
+- **Unsupervised Region Proposal**: Extract meaningful candidate text lines and layout blocks using CRAFT/EasyOCR and multi-scale MSER (Maximally Stable Extremal Regions).
+- **Machine Learning Classification**: Extract 16-dimensional geometric and spatial features and classify layout regions using a trained Gradient Boosting model with 100% validation accuracy.
+- **Postprocessing & Overlap Removal**: Apply Multi-Class Non-Maximum Suppression (NMS) and hard boundary verification to eliminate duplicate boxes.
+- **Interactive Web UI**: Provide a web-based user interface for live image uploads, threshold adjustment, and visual inspection for project presentations.
+
+---
+
+## 🏗️ 3. System Architecture & Methodology
 
 ```
-┌─────────────────┐
-│ Input Document  │ (Palm-leaf, Paper, Degraded Manuscript Image)
-└────────┬────────┘
-         │
-         ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│ Stage 1: Robust Preprocessing Layer                                    │
-│ • Grayscale Conversion & CLAHE (Contrast-Limited Adaptive Equalization) │
-│ • Bilateral Denoising (Preserves ink strokes while smoothing textures) │
-│ • Automated Hough Deskewing                                            │
-│ • Sauvola Adaptive Binarization (Handles uneven lighting & stains)     │
-└────────┬───────────────────────────────────────────────────────────────┘
-         │
-         ▼
+│                        INPUT MANUSCRIPT IMAGE                          │
+│               (Palm Leaf, Handmade Paper, Degraded Script)             │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│ Stage 2: Hybrid Unsupervised Region Proposal                           │
-│ • Deep CRAFT / EasyOCR Text Detection (Word/Line level)                │
-│ • Maximally Stable Extremal Regions (MSER) Character-Cluster Extraction│
-│ • Morphological Directional Grouping (Text-line assembly)              │
-│ • Spatial Line Merging & Containment Filtering                         │
-└────────┬───────────────────────────────────────────────────────────────┘
-         │
-         ▼
+│ STAGE 1: Image Preprocessing                                           │
+│ • Grayscale Conversion                                                 │
+│ • CLAHE (Adaptive Contrast Enhancement for faded ink)                  │
+│ • Bilateral Filtering (Denoising while preserving sharp strokes)       │
+│ • Hough Transform Deskewing                                            │
+│ • Sauvola Adaptive Binarization                                        │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│ Stage 3: Feature Engineering & Gradient Boosting Classifier            │
-│ • 16D Geometric & Spatial Representation (Relative Y/X, Centerness,   │
-│   Aspect Ratio, Ink Stroke Transitions, Edge Density)                  │
-│ • Multi-Class Gradient Boosting Classifier (100% Validation Accuracy)  │
-│ • Layout Prior Fusion                                                  │
-└────────┬───────────────────────────────────────────────────────────────┘
-         │
-         ▼
+│ STAGE 2: Hybrid Candidate Region Proposal                              │
+│ • CRAFT / EasyOCR Deep Text Detector (Line & word level)               │
+│ • MSER (Maximally Stable Extremal Regions) Glyph Component Analysis    │
+│ • Directional Morphological Grouping                                   │
+│ • Spatial Proximity Merging & Containment Filtering                    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│ Stage 4: Postprocessing & Boundary Verification                        │
-│ • Multi-Class Non-Maximum Suppression (NMS) (Eliminates duplicates)    │
-│ • Hard Page-Boundary Coordinate Clipping [0 <= x1 < x2 <= W]          │
-│ • Confidence Threshold Filtering & Area Verification                   │
-└────────┬───────────────────────────────────────────────────────────────┘
-         │
-         ├─────────────────────────────────────────┐
-         ▼                                         ▼
-┌────────────────────────────────┐     ┌─────────────────────────────────┐
-│ JSON Layout Predictions        │     │ Color-Coded Annotated Image     │
-│ (Coordinates, Scores, Classes) │     │ (Visual Quality Assurance Copy) │
-└────────────────────────────────┘     └─────────────────────────────────┘
+│ STAGE 3: Feature Extraction & ML Classification                        │
+│ • 16D Feature Vector: Relative Y/X coordinates, Page Centerness,       │
+│   Aspect Ratio, Relative Area, Stroke Transitions, Edge Density        │
+│ • Gradient Boosting Classifier (Trained 5-Class Model)                 │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ STAGE 4: Postprocessing & Evaluation                                   │
+│ • Multi-Class Non-Maximum Suppression (NMS)                            │
+│ • Coordinate Boundary Clamping [0 <= x1 < x2 <= W]                     │
+│ • Confidence Score Gating                                              │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                  ┌─────────────────┴─────────────────┐
+                  ▼                                   ▼
+      ┌───────────────────────┐           ┌───────────────────────┐
+      │  JSON Output Results  │           │ Annotated Color Image │
+      │  (BBoxes & Scores)    │           │ (Visual Verification) │
+      └───────────────────────┘           └───────────────────────┘
 ```
 
 ---
 
-## 📊 Benchmark & Accuracy Evaluation
+## 💻 4. Tech Stack & Technologies Used
 
-The layout classifier is evaluated across $440$ multi-format manuscript layout crops:
-
-| Layout Class | Precision | Recall | F1-Score | Support |
-| :--- | :---: | :---: | :---: | :---: |
-| **`header`** | **1.00** | **1.00** | **1.00** | 80 |
-| **`footer`** | **1.00** | **1.00** | **1.00** | 80 |
-| **`main_text`** | **1.00** | **1.00** | **1.00** | 120 |
-| **`side_text`** | **1.00** | **1.00** | **1.00** | 80 |
-| **`filler`** | **1.00** | **1.00** | **1.00** | 80 |
-| **Overall Accuracy** | — | — | **100.00%** | **440** |
+- **Programming Language**: Python 3.10+
+- **Computer Vision & Image Processing**: OpenCV (`cv2`), Pillow, SciPy
+- **Machine Learning**: Scikit-Learn (Gradient Boosting Classifier, evaluation metrics)
+- **Deep Learning Text Detection**: PyTorch, EasyOCR (CRAFT)
+- **Web Frontend & Backend**: Flask, HTML5, Vanilla CSS, JavaScript
 
 ---
 
-## 📁 Repository Structure
+## 📁 5. Project Folder Structure
 
 ```
 Manuscript/
-├── src/
-│   ├── preprocessing.py     # CLAHE, Bilateral Denoising, Hough Deskew, Sauvola
-│   ├── region_proposal.py   # Hybrid CRAFT/EasyOCR + MSER candidate extraction
-│   ├── features.py          # 16D geometric, spatial, and texture feature engineering
-│   ├── classifier.py        # 5-class Gradient Boosting ML model & spatial heuristics
-│   ├── postprocess.py       # Multi-class NMS, confidence gating, boundary clipping
-│   ├── visualize.py         # OpenCV visual annotation rendering with color badges
-│   └── utils.py             # Image I/O, logging, directory and JSON helpers
+├── src/                         # Core Python modules
+│   ├── preprocessing.py         # CLAHE, Denoising, Deskewing, Binarization
+│   ├── region_proposal.py       # CRAFT + MSER candidate proposal generation
+│   ├── features.py              # 16D feature extraction per candidate region
+│   ├── classifier.py            # Gradient Boosting model & spatial priors
+│   ├── postprocess.py           # Multi-Class NMS & bounding box validation
+│   ├── visualize.py             # OpenCV color-coded bounding box rendering
+│   └── utils.py                 # File handling, logging, and JSON serialization
 ├── models/
-│   └── classifier.pkl       # Trained layout classifier model weights
+│   └── classifier.pkl           # Trained ML model weights
 ├── data/
-│   └── test_images/         # Sample test manuscripts (palm-leaf, paper)
+│   └── test_images/             # Sample manuscript test images
 ├── templates/
-│   └── index.html           # Modern interactive Web UI template
+│   └── index.html               # Web UI template
 ├── static/
-│   ├── style.css            # Responsive dark/glassmorphic interface styles
-│   └── app.js               # Dynamic upload, visualization & inspector logic
-├── results/                 # Saved prediction JSONs and annotated images
-├── app.py                   # Flask Web Application entrypoint
-├── inference.py             # CLI Batch Inference entrypoint
-├── train_classifier.py      # Classifier training & validation script
-├── requirements.txt         # Project dependencies
-├── .gitignore               # Git ignore rules
-└── README.md                # Project documentation
+│   ├── style.css                # Web UI styling
+│   └── app.js                   # Client-side interactive logic
+├── results/                     # Saved output JSONs and annotated images
+├── app.py                       # Flask Web Application entry point
+├── inference.py                 # CLI Batch Processing script
+├── train_classifier.py          # Model training & validation script
+├── requirements.txt             # Required Python dependencies
+├── .gitignore                   # Git ignore rules
+└── README.md                    # Project documentation
 ```
 
 ---
 
-## ⚡ Installation & Setup
+## ⚙️ 6. Installation & How to Run
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/your-username/manuscript-layout-detection.git
-cd manuscript-layout-detection
-```
-
-### 2. Set Up Virtual Environment
-```bash
+### Step 1: Set Up Python Virtual Environment
+Open PowerShell / Terminal in the project folder:
+```powershell
 # Create virtual environment
 python -m venv .venv
 
-# Activate environment
-# On Windows:
+# Activate virtual environment
+# Windows:
 .venv\Scripts\activate
-# On Linux / macOS:
+# macOS/Linux:
 source .venv/bin/activate
-```
 
-### 3. Install Dependencies
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
 ---
 
-## 🚀 How to Run
-
-### Option A: Interactive Web UI (Recommended for Demos)
-Launch the built-in Flask web interface:
-```bash
+### Step 2: Run the Interactive Web UI (Best for Viva / Demo)
+```powershell
 python app.py
 ```
-Open your browser and navigate to: **`http://localhost:5000`**
+Open your web browser and go to: **`http://localhost:5000`**
 
-Features:
-* 📤 Drag-and-drop manuscript upload
-* 🎛️ Live confidence score & NMS threshold sliders
-* 🏷️ Interactive class filtering (All, Header, Footer, Main Text, Side Text, Filler)
-* 📋 Side-by-side JSON output viewer and download buttons
+**Demo Highlights in the Web UI**:
+1. Upload any manuscript image (JPG, PNG).
+2. View detected regions color-coded on the manuscript.
+3. Filter by region classes (Header, Footer, Main Text, Side Text, Filler).
+4. Inspect predicted confidence scores and bounding box coordinates.
+5. View and download structured JSON results.
 
 ---
 
-### Option B: Command Line Interface (CLI)
+### Step 3: Run via Command Line (CLI)
 
-#### 1. Run Inference on a Single Image
-```bash
+**Run on a single image:**
+```powershell
 python inference.py --input ./data/test_images/sample_paper_manuscript.jpg --output ./results
 ```
 
-#### 2. Run Batch Inference on an Entire Directory
-```bash
+**Run batch processing on all test images:**
+```powershell
 python inference.py --input ./data/test_images --output ./results
 ```
 
-#### CLI Parameters:
-* `--input`: Path to input image file or folder containing images (required).
-* `--output`: Directory to save JSON predictions and annotated images (default: `./results`).
-* `--confidence-threshold`: Minimum confidence cutoff (default: `0.30`).
-* `--nms-threshold`: Non-Maximum Suppression IoU threshold (default: `0.45`).
+---
+
+## 📊 7. Experimental Results & Performance
+
+### Classification Metrics (Validation on 440 Layout Crops)
+
+| Class Name | Precision | Recall | F1-Score | Samples |
+| :--- | :---: | :---: | :---: | :---: |
+| **`header`** | 1.00 | 1.00 | 1.00 | 80 |
+| **`footer`** | 1.00 | 1.00 | 1.00 | 80 |
+| **`main_text`** | 1.00 | 1.00 | 1.00 | 120 |
+| **`side_text`** | 1.00 | 1.00 | 1.00 | 80 |
+| **`filler`** | 1.00 | 1.00 | 1.00 | 80 |
+| **Overall Accuracy** | — | — | **100.00%** | **440** |
 
 ---
 
-## 📄 Output Specification
+## 📈 8. Key Highlights for Viva & Evaluation
 
-### JSON Prediction Schema (`<image_name>_results.json`)
-```json
-{
-  "image_name": "sample_paper_manuscript.jpg",
-  "relative_path": "data/test_images/sample_paper_manuscript.jpg",
-  "image_size": {
-    "height": 1300,
-    "width": 1000
-  },
-  "processing_time_seconds": 12.11,
-  "regions_count": 16,
-  "regions": [
-    {
-      "box": [184, 50, 621, 74],
-      "label": "header",
-      "score": 1.0
-    },
-    {
-      "box": [143, 195, 806, 223],
-      "label": "main_text",
-      "score": 0.7683
-    },
-    {
-      "box": [13, 999, 158, 1102],
-      "label": "side_text",
-      "score": 0.9806
-    },
-    {
-      "box": [163, 1203, 697, 1223],
-      "label": "footer",
-      "score": 1.0
-    }
-  ]
-}
-```
+1. **Why Hybrid Architecture over standard YOLO?**
+   - Labeled historical manuscript data is scarce.
+   - The hybrid approach combines unsupervised text detection (CRAFT + MSER) with geometric machine learning (Gradient Boosting), requiring no huge annotated datasets.
+
+2. **How are Overlapping Boxes Handled?**
+   - Using Multi-Class Non-Maximum Suppression (NMS) and containment filtering to remove nested or redundant candidate boxes.
+
+3. **How is Document Degradation Handled?**
+   - Sauvola adaptive binarization isolates ink strokes even under severe uneven lighting, stains, and bleed-through.
 
 ---
 
-## 🔄 Retraining the Classifier
-
-To re-fit the Gradient Boosting Classifier and regenerate `models/classifier.pkl`:
-```bash
-python train_classifier.py --output-model ./models/classifier.pkl
-```
-
----
-
-## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
+## 👥 Authors & Academic Details
+- **Project Name**: Historical Manuscript Layout Region Detection
+- **Domain**: Computer Vision, Document AI, Pattern Recognition

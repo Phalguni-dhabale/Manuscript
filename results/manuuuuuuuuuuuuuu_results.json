@@ -1,0 +1,61 @@
+{
+  "image_name": "manuuuuuuuuuuuuuu.jpeg",
+  "image_size": {
+    "height": 261,
+    "width": 607
+  },
+  "processing_time_seconds": 10.019,
+  "regions_count": 5,
+  "regions": [
+    {
+      "box": [
+        171,
+        7,
+        439,
+        19
+      ],
+      "label": "header",
+      "score": 1.0
+    },
+    {
+      "box": [
+        88,
+        21,
+        503,
+        170
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        552,
+        38,
+        577,
+        48
+      ],
+      "label": "filler",
+      "score": 1.0
+    },
+    {
+      "box": [
+        106,
+        146,
+        509,
+        205
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        163,
+        231,
+        405,
+        243
+      ],
+      "label": "footer",
+      "score": 1.0
+    }
+  ]
+}

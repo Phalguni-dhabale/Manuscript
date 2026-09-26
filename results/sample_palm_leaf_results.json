@@ -1,0 +1,132 @@
+{
+  "image_name": "sample_palm_leaf.jpg",
+  "relative_path": "data\\test_images\\sample_palm_leaf.jpg",
+  "image_size": {
+    "height": 450,
+    "width": 1400
+  },
+  "processing_time_seconds": 9.8226,
+  "regions_count": 12,
+  "regions": [
+    {
+      "box": [
+        1099,
+        19,
+        1213,
+        35
+      ],
+      "label": "header",
+      "score": 0.3788
+    },
+    {
+      "box": [
+        377,
+        30,
+        855,
+        56
+      ],
+      "label": "header",
+      "score": 1.0
+    },
+    {
+      "box": [
+        136,
+        89,
+        793,
+        118
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        136,
+        135,
+        745,
+        162
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        41,
+        137,
+        85,
+        153
+      ],
+      "label": "filler",
+      "score": 1.0
+    },
+    {
+      "box": [
+        1237,
+        137,
+        1345,
+        153
+      ],
+      "label": "filler",
+      "score": 1.0
+    },
+    {
+      "box": [
+        136,
+        181,
+        706,
+        206
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        37,
+        205,
+        89,
+        223
+      ],
+      "label": "filler",
+      "score": 1.0
+    },
+    {
+      "box": [
+        1237,
+        206,
+        1343,
+        244
+      ],
+      "label": "side_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        156,
+        225,
+        706,
+        253
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        136,
+        269,
+        745,
+        298
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        326,
+        392,
+        841,
+        416
+      ],
+      "label": "footer",
+      "score": 1.0
+    }
+  ]
+}

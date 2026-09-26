@@ -1,0 +1,309 @@
+{
+  "total_images": 2,
+  "batch_results": [
+    {
+      "image_name": "sample_palm_leaf.jpg",
+      "relative_path": "data\\test_images\\sample_palm_leaf.jpg",
+      "image_size": {
+        "height": 450,
+        "width": 1400
+      },
+      "processing_time_seconds": 9.8226,
+      "regions_count": 12,
+      "regions": [
+        {
+          "box": [
+            1099,
+            19,
+            1213,
+            35
+          ],
+          "label": "header",
+          "score": 0.3788
+        },
+        {
+          "box": [
+            377,
+            30,
+            855,
+            56
+          ],
+          "label": "header",
+          "score": 1.0
+        },
+        {
+          "box": [
+            136,
+            89,
+            793,
+            118
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            136,
+            135,
+            745,
+            162
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            41,
+            137,
+            85,
+            153
+          ],
+          "label": "filler",
+          "score": 1.0
+        },
+        {
+          "box": [
+            1237,
+            137,
+            1345,
+            153
+          ],
+          "label": "filler",
+          "score": 1.0
+        },
+        {
+          "box": [
+            136,
+            181,
+            706,
+            206
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            37,
+            205,
+            89,
+            223
+          ],
+          "label": "filler",
+          "score": 1.0
+        },
+        {
+          "box": [
+            1237,
+            206,
+            1343,
+            244
+          ],
+          "label": "side_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            156,
+            225,
+            706,
+            253
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            136,
+            269,
+            745,
+            298
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            326,
+            392,
+            841,
+            416
+          ],
+          "label": "footer",
+          "score": 1.0
+        }
+      ]
+    },
+    {
+      "image_name": "sample_paper_manuscript.jpg",
+      "relative_path": "data\\test_images\\sample_paper_manuscript.jpg",
+      "image_size": {
+        "height": 1300,
+        "width": 1000
+      },
+      "processing_time_seconds": 5.0807,
+      "regions_count": 16,
+      "regions": [
+        {
+          "box": [
+            184,
+            50,
+            621,
+            74
+          ],
+          "label": "header",
+          "score": 1.0
+        },
+        {
+          "box": [
+            784,
+            50,
+            921,
+            74
+          ],
+          "label": "header",
+          "score": 1.0
+        },
+        {
+          "box": [
+            143,
+            137,
+            800,
+            170
+          ],
+          "label": "header",
+          "score": 1.0
+        },
+        {
+          "box": [
+            143,
+            195,
+            806,
+            223
+          ],
+          "label": "main_text",
+          "score": 0.7683
+        },
+        {
+          "box": [
+            143,
+            246,
+            801,
+            282
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            4,
+            288,
+            176,
+            306
+          ],
+          "label": "filler",
+          "score": 0.4246
+        },
+        {
+          "box": [
+            143,
+            305,
+            716,
+            333
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            143,
+            360,
+            735,
+            387
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            3,
+            388,
+            150,
+            405
+          ],
+          "label": "filler",
+          "score": 0.482
+        },
+        {
+          "box": [
+            143,
+            413,
+            747,
+            444
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            144,
+            468,
+            761,
+            499
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            144,
+            525,
+            702,
+            552
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            143,
+            579,
+            742,
+            608
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            143,
+            636,
+            767,
+            664
+          ],
+          "label": "main_text",
+          "score": 1.0
+        },
+        {
+          "box": [
+            13,
+            999,
+            158,
+            1102
+          ],
+          "label": "side_text",
+          "score": 0.9806
+        },
+        {
+          "box": [
+            163,
+            1203,
+            697,
+            1223
+          ],
+          "label": "footer",
+          "score": 1.0
+        }
+      ]
+    }
+  ]
+}

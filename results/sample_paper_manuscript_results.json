@@ -1,0 +1,172 @@
+{
+  "image_name": "sample_paper_manuscript.jpg",
+  "relative_path": "data\\test_images\\sample_paper_manuscript.jpg",
+  "image_size": {
+    "height": 1300,
+    "width": 1000
+  },
+  "processing_time_seconds": 5.0807,
+  "regions_count": 16,
+  "regions": [
+    {
+      "box": [
+        184,
+        50,
+        621,
+        74
+      ],
+      "label": "header",
+      "score": 1.0
+    },
+    {
+      "box": [
+        784,
+        50,
+        921,
+        74
+      ],
+      "label": "header",
+      "score": 1.0
+    },
+    {
+      "box": [
+        143,
+        137,
+        800,
+        170
+      ],
+      "label": "header",
+      "score": 1.0
+    },
+    {
+      "box": [
+        143,
+        195,
+        806,
+        223
+      ],
+      "label": "main_text",
+      "score": 0.7683
+    },
+    {
+      "box": [
+        143,
+        246,
+        801,
+        282
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        4,
+        288,
+        176,
+        306
+      ],
+      "label": "filler",
+      "score": 0.4246
+    },
+    {
+      "box": [
+        143,
+        305,
+        716,
+        333
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        143,
+        360,
+        735,
+        387
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        3,
+        388,
+        150,
+        405
+      ],
+      "label": "filler",
+      "score": 0.482
+    },
+    {
+      "box": [
+        143,
+        413,
+        747,
+        444
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        144,
+        468,
+        761,
+        499
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        144,
+        525,
+        702,
+        552
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        143,
+        579,
+        742,
+        608
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        143,
+        636,
+        767,
+        664
+      ],
+      "label": "main_text",
+      "score": 1.0
+    },
+    {
+      "box": [
+        13,
+        999,
+        158,
+        1102
+      ],
+      "label": "side_text",
+      "score": 0.9806
+    },
+    {
+      "box": [
+        163,
+        1203,
+        697,
+        1223
+      ],
+      "label": "footer",
+      "score": 1.0
+    }
+  ]
+}

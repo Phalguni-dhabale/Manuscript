@@ -133,6 +133,9 @@ Manuscript/
 ├── inference.py                 # CLI Batch Processing entry point
 ├── train_classifier.py          # Model training & validation evaluation script
 ├── requirements.txt             # Required Python dependencies
+├── Procfile                     # Web server process declaration (for Render / Heroku)
+├── render.yaml                  # Render Blueprints Infrastructure-as-Code
+├── vercel.json                  # Vercel serverless deployment configuration
 ├── .gitignore                   # Git ignore rules
 └── README.md                    # Project documentation
 ```
@@ -190,6 +193,27 @@ python inference.py --input ./data/test_images --output ./results
 * `--output`: Output folder for JSON files and annotated images (default: `./results`).
 * `--confidence-threshold`: Minimum confidence cutoff (default: `0.30`).
 * `--nms-threshold`: Non-Maximum Suppression IoU threshold (default: `0.45`).
+
+---
+
+### 🌐 Step 4: Free Cloud Deployment (Render & Vercel)
+
+This project includes pre-configured **Infrastructure-as-Code** deployment files:
+
+#### Option 1: Deploy to Render (Recommended for Flask & PyTorch)
+1. Go to [Render.com](https://render.com) and log in with your GitHub account.
+2. Click **New +** $\to$ **Web Service** $\to$ Connect your `Phalguni-dhabale/Manuscript` repository.
+3. Render will automatically detect [`render.yaml`](./render.yaml) and [`Procfile`](./Procfile) and configure:
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `gunicorn app:app --workers 1 --threads 4 --timeout 180 --bind 0.0.0.0:$PORT`
+4. Click **Deploy Web Service** to get a free live `.onrender.com` link.
+
+#### Option 2: Deploy to Vercel
+1. Go to [Vercel.com](https://vercel.com) and log in with GitHub.
+2. Click **Add New...** $\to$ **Project** $\to$ Import `Phalguni-dhabale/Manuscript`.
+3. Vercel will automatically detect [`vercel.json`](./vercel.json).
+4. Click **Deploy** to publish the serverless app.
 
 ---
 

@@ -34,16 +34,22 @@ import numpy as np
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # Configuration
-UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'uploads')
-RESULTS_FOLDER = os.path.join(PROJECT_ROOT, 'results')
+try:
+    UPLOAD_FOLDER = os.path.join(PROJECT_ROOT, 'uploads')
+    RESULTS_FOLDER = os.path.join(PROJECT_ROOT, 'results')
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs(RESULTS_FOLDER, exist_ok=True)
+except (PermissionError, OSError):
+    UPLOAD_FOLDER = os.path.join('/tmp', 'uploads')
+    RESULTS_FOLDER = os.path.join('/tmp', 'results')
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs(RESULTS_FOLDER, exist_ok=True)
+
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'bmp', 'tif', 'tiff', 'webp'}
 MAX_CONTENT_LENGTH = 50 * 1024 * 1024  # 50MB max upload
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(RESULTS_FOLDER, exist_ok=True)
 
 # Load classifier once at startup
 classifier = None
@@ -193,8 +199,10 @@ def serve_result(filename):
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
     print("\n" + "=" * 60)
     print("  Manuscript Layout Region Detection — Web UI")
-    print("  Open in browser: http://localhost:5000")
+    print(f"  Open in browser: http://localhost:{port}")
     print("=" * 60 + "\n")
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
+

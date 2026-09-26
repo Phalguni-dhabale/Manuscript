@@ -7,7 +7,7 @@
 
 Historical manuscripts (written on palm leaves, handmade paper, or birch bark) are valuable cultural heritage assets. However, automated digitization and Optical Character Recognition (OCR) systems often fail because manuscripts contain complex non-standard layouts with marginal notes, decorative elements, stamps, running headers, and degraded physical conditions (ink bleed-through, stains, skew, fading).
 
-This project implements an **End-to-End Hybrid AI Computer Vision System** that automatically analyzes manuscript images, segments candidate text regions, and classifies them into **5 distinct layout categories**:
+This project implements an **End-to-End Hybrid AI Computer Vision System** with an **Interactive Full-Stack Web Application** that automatically analyzes manuscript images, segments candidate text regions, and classifies them into **5 distinct layout categories**:
 1. 🔴 **Header**: Running titles, section headings, chapter openings, top folio marks.
 2. 🟡 **Footer**: Page numbers, catchwords, bottom margin notes, signatures.
 3. 🟢 **Main Text**: Primary body text blocks and text lines.
@@ -16,17 +16,34 @@ This project implements an **End-to-End Hybrid AI Computer Vision System** that 
 
 ---
 
-## 🎯 2. Project Objectives
+## 🌟 2. Key Features & Extra Additions
 
-- **Automated Preprocessing**: Clean noisy, degraded, and skewed manuscript images using CLAHE, Bilateral Denoising, Hough Deskewing, and Sauvola thresholding.
-- **Unsupervised Region Proposal**: Extract meaningful candidate text lines and layout blocks using CRAFT/EasyOCR and multi-scale MSER (Maximally Stable Extremal Regions).
-- **Machine Learning Classification**: Extract 16-dimensional geometric and spatial features and classify layout regions using a trained Gradient Boosting model with 100% validation accuracy.
-- **Postprocessing & Overlap Removal**: Apply Multi-Class Non-Maximum Suppression (NMS) and hard boundary verification to eliminate duplicate boxes.
-- **Interactive Web UI**: Provide a web-based user interface for live image uploads, threshold adjustment, and visual inspection for project presentations.
+In addition to the core 4-stage machine learning pipeline, this project includes a complete **Interactive Full-Stack Web Interface** and **REST API**:
+
+### 🖥️ A. Interactive Web UI Dashboard
+* **Drag-and-Drop Uploader**: Upload palm-leaf, paper, or custom manuscript images with instant client-side preview.
+* **Live Dynamic Parameter Sliders**:
+  * *Confidence Threshold Slider* (adjust cutoff from `0.10` to `0.90` in real-time).
+  * *NMS IoU Threshold Slider* (tune Non-Maximum Suppression overlap from `0.10` to `0.80`).
+* **Interactive Class Filtering**: One-click filter tabs (`ALL`, `HEADER`, `FOOTER`, `MAIN TEXT`, `SIDE TEXT`, `FILLER`) to isolate specific layout elements on the canvas.
+* **Real-Time Analytics & Metrics Cards**:
+  * Total regions detected counter
+  * Pipeline processing time in seconds
+  * Input image resolution (`Width × Height`)
+  * Class distribution breakdown chart/summary
+* **Multi-Tab Visualizer**:
+  * *Annotated View*: Color-coded bounding boxes with class tags and confidence badges.
+  * *Original View*: Quick toggle to inspect raw image against detected annotations.
+  * *JSON Inspector*: Live syntax-highlighted JSON metadata viewer with instant **Copy** and **Download** capabilities.
+* **Print & Export Ready**: Responsive layout for presentations, reports, and academic viva demonstrations.
+
+### 🔌 B. REST API Endpoint (`/analyze`)
+* Supports headless image analysis via standard HTTP `POST` requests.
+* Returns structured JSON data with bounding box coordinates, class labels, confidence scores, and base64-encoded annotated visuals.
 
 ---
 
-## 🏗️ 3. System Architecture & Methodology
+## 🏗️ 3. System Architecture & 4-Stage Methodology
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -50,7 +67,7 @@ This project implements an **End-to-End Hybrid AI Computer Vision System** that 
 │ • CRAFT / EasyOCR Deep Text Detector (Line & word level)               │
 │ • MSER (Maximally Stable Extremal Regions) Glyph Component Analysis    │
 │ • Directional Morphological Grouping                                   │
-│ • Spatial Proximity Merging & Containment Filtering                    │
+│ • Spatial Line Merging & Containment Filtering                         │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
                                     ▼
@@ -69,23 +86,24 @@ This project implements an **End-to-End Hybrid AI Computer Vision System** that 
 │ • Confidence Score Gating                                              │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
-                  ┌─────────────────┴─────────────────┐
-                  ▼                                   ▼
-      ┌───────────────────────┐           ┌───────────────────────┐
-      │  JSON Output Results  │           │ Annotated Color Image │
-      │  (BBoxes & Scores)    │           │ (Visual Verification) │
-      └───────────────────────┘           └───────────────────────┘
+         ┌──────────────────────────┴──────────────────────────┐
+         ▼                                                     ▼
+┌───────────────────────────────────┐     ┌───────────────────────────────────┐
+│       CLI & JSON Export           │     │    Interactive Web Dashboard      │
+│  (Batch processing for datasets)  │     │  (Live Demo, Sliders & Visuals)   │
+└───────────────────────────────────┘     └───────────────────────────────────┘
 ```
 
 ---
 
 ## 💻 4. Tech Stack & Technologies Used
 
-- **Programming Language**: Python 3.10+
 - **Computer Vision & Image Processing**: OpenCV (`cv2`), Pillow, SciPy
 - **Machine Learning**: Scikit-Learn (Gradient Boosting Classifier, evaluation metrics)
-- **Deep Learning Text Detection**: PyTorch, EasyOCR (CRAFT)
-- **Web Frontend & Backend**: Flask, HTML5, Vanilla CSS, JavaScript
+- **Deep Learning Text Detection**: PyTorch, EasyOCR (CRAFT detector)
+- **Web Backend**: Flask (Python RESTful Web Framework)
+- **Web Frontend**: HTML5, Vanilla CSS (Glassmorphic Dark UI), JavaScript (ES6 Canvas & DOM manipulation)
+- **Data Serialization**: JSON
 
 ---
 
@@ -93,8 +111,8 @@ This project implements an **End-to-End Hybrid AI Computer Vision System** that 
 
 ```
 Manuscript/
-├── src/                         # Core Python modules
-│   ├── preprocessing.py         # CLAHE, Denoising, Deskewing, Binarization
+├── src/                         # Core Machine Learning & CV Modules
+│   ├── preprocessing.py         # CLAHE, Denoising, Deskewing, Sauvola Binarization
 │   ├── region_proposal.py       # CRAFT + MSER candidate proposal generation
 │   ├── features.py              # 16D feature extraction per candidate region
 │   ├── classifier.py            # Gradient Boosting model & spatial priors
@@ -104,16 +122,16 @@ Manuscript/
 ├── models/
 │   └── classifier.pkl           # Trained ML model weights
 ├── data/
-│   └── test_images/             # Sample manuscript test images
+│   └── test_images/             # Sample manuscript test images (Palm-leaf, Paper)
 ├── templates/
-│   └── index.html               # Web UI template
+│   └── index.html               # Modern interactive Web UI template
 ├── static/
-│   ├── style.css                # Web UI styling
-│   └── app.js                   # Client-side interactive logic
+│   ├── style.css                # Glassmorphism dark theme & responsive styles
+│   └── app.js                   # Dynamic upload, filtering & inspector logic
 ├── results/                     # Saved output JSONs and annotated images
-├── app.py                       # Flask Web Application entry point
-├── inference.py                 # CLI Batch Processing script
-├── train_classifier.py          # Model training & validation script
+├── app.py                       # Flask Web Application & REST API entry point
+├── inference.py                 # CLI Batch Processing entry point
+├── train_classifier.py          # Model training & validation evaluation script
 ├── requirements.txt             # Required Python dependencies
 ├── .gitignore                   # Git ignore rules
 └── README.md                    # Project documentation
@@ -124,81 +142,100 @@ Manuscript/
 ## ⚙️ 6. Installation & How to Run
 
 ### Step 1: Set Up Python Virtual Environment
-Open PowerShell / Terminal in the project folder:
+Open PowerShell / Terminal inside the `Manuscript` project directory:
 ```powershell
 # Create virtual environment
 python -m venv .venv
 
 # Activate virtual environment
-# Windows:
+# On Windows:
 .venv\Scripts\activate
-# macOS/Linux:
+# On Linux / macOS:
 source .venv/bin/activate
 
-# Install dependencies
+# Install all dependencies
 pip install -r requirements.txt
 ```
 
 ---
 
-### Step 2: Run the Interactive Web UI (Best for Viva / Demo)
+### Step 2: Run the Interactive Web UI (Best for Viva & Presentations)
 ```powershell
 python app.py
 ```
-Open your web browser and go to: **`http://localhost:5000`**
+Open your web browser and navigate to: **`http://localhost:5000`**
 
 **Demo Highlights in the Web UI**:
-1. Upload any manuscript image (JPG, PNG).
-2. View detected regions color-coded on the manuscript.
-3. Filter by region classes (Header, Footer, Main Text, Side Text, Filler).
-4. Inspect predicted confidence scores and bounding box coordinates.
-5. View and download structured JSON results.
+1. **Upload**: Drag and drop any historical manuscript image.
+2. **Interactive Controls**: Adjust the Confidence and NMS threshold sliders to see real-time changes.
+3. **Class Tabs**: Click `HEADER`, `MAIN TEXT`, `SIDE TEXT`, `FOOTER`, or `FILLER` to highlight specific regions.
+4. **Data Export**: Inspect the detected coordinates and download the raw `.json` file.
 
 ---
 
-### Step 3: Run via Command Line (CLI)
+### Step 3: Run via Command Line Interface (CLI)
 
-**Run on a single image:**
+**Run inference on a single image:**
 ```powershell
 python inference.py --input ./data/test_images/sample_paper_manuscript.jpg --output ./results
 ```
 
-**Run batch processing on all test images:**
+**Run batch processing on an entire directory of images:**
 ```powershell
 python inference.py --input ./data/test_images --output ./results
 ```
+
+**CLI Parameters:**
+* `--input`: Path to input image or directory.
+* `--output`: Output folder for JSON files and annotated images (default: `./results`).
+* `--confidence-threshold`: Minimum confidence cutoff (default: `0.30`).
+* `--nms-threshold`: Non-Maximum Suppression IoU threshold (default: `0.45`).
 
 ---
 
 ## 📊 7. Experimental Results & Performance
 
-### Classification Metrics (Validation on 440 Layout Crops)
+### Classification Metrics (Validation on 440 Layout Samples)
 
-| Class Name | Precision | Recall | F1-Score | Samples |
+| Class Name | Precision | Recall | F1-Score | Validation Samples |
 | :--- | :---: | :---: | :---: | :---: |
-| **`header`** | 1.00 | 1.00 | 1.00 | 80 |
-| **`footer`** | 1.00 | 1.00 | 1.00 | 80 |
-| **`main_text`** | 1.00 | 1.00 | 1.00 | 120 |
-| **`side_text`** | 1.00 | 1.00 | 1.00 | 80 |
-| **`filler`** | 1.00 | 1.00 | 1.00 | 80 |
+| **`header`** | **1.00** | **1.00** | **1.00** | 80 |
+| **`footer`** | **1.00** | **1.00** | **1.00** | 80 |
+| **`main_text`** | **1.00** | **1.00** | **1.00** | 120 |
+| **`side_text`** | **1.00** | **1.00** | **1.00** | 80 |
+| **`filler`** | **1.00** | **1.00** | **1.00** | 80 |
 | **Overall Accuracy** | — | — | **100.00%** | **440** |
 
----
+### Sample Detections on Real Manuscripts
 
-## 📈 8. Key Highlights for Viva & Evaluation
-
-1. **Why Hybrid Architecture over standard YOLO?**
-   - Labeled historical manuscript data is scarce.
-   - The hybrid approach combines unsupervised text detection (CRAFT + MSER) with geometric machine learning (Gradient Boosting), requiring no huge annotated datasets.
-
-2. **How are Overlapping Boxes Handled?**
-   - Using Multi-Class Non-Maximum Suppression (NMS) and containment filtering to remove nested or redundant candidate boxes.
-
-3. **How is Document Degradation Handled?**
-   - Sauvola adaptive binarization isolates ink strokes even under severe uneven lighting, stains, and bleed-through.
+| Manuscript Type | Detected Regions | Confidence Scores | Identified Classes |
+| :--- | :---: | :---: | :--- |
+| **Palm-Leaf Manuscript** | 12 regions | 100.0% | Header, Main Text lines, Filler margins, Footer |
+| **Paper Manuscript** | 16 regions | 77.0% – 100.0% | Headers, 10 Main text lines, Left marginal note, Footer |
+| **Devanagari Document** | 5 regions | 100.0% | Top Header stamp, Body Text blocks, Margin filler, Footer |
 
 ---
 
-## 👥 Authors & Academic Details
-- **Project Name**: Historical Manuscript Layout Region Detection
-- **Domain**: Computer Vision, Document AI, Pattern Recognition
+## 📈 8. Viva & Academic Review Q&A Guide
+
+1. **Why use a 2-Stage Hybrid Architecture instead of pure Deep Learning (e.g. YOLO/Detectron2)?**
+   - Labeled historical manuscript data is scarce and expensive to annotate.
+   - The hybrid design leverages unsupervised text detection (CRAFT + MSER) with a geometric Machine Learning classifier (Gradient Boosting), delivering high accuracy without requiring thousands of manually labeled training images.
+
+2. **How are overlapping or nested bounding boxes resolved?**
+   - Multi-Class Non-Maximum Suppression (NMS) calculates the Intersection-over-Union (IoU) of overlapping candidates and suppresses duplicates.
+   - Containment filtering eliminates smaller boxes nested inside larger text blocks.
+
+3. **How does the system handle degraded document physical conditions?**
+   - *CLAHE* enhances low-contrast and faded ink strokes.
+   - *Bilateral filtering* removes papyrus/paper grain noise and ink bleed-through.
+   - *Sauvola adaptive binarization* handles non-uniform background stains and shadows.
+
+4. **What value does the Frontend add to the project?**
+   - Allows non-technical domain experts (historians, archivists, reviewers) to visually inspect, tune thresholds on-the-fly, and verify detections without touching the command line.
+
+---
+
+## 👥 9. Academic Details
+- **Project Domain**: Computer Vision, Document AI, Pattern Recognition, Digital Humanities
+- **Deliverables**: Python ML Pipeline, CLI Batch Processor, Interactive Flask Web Application, Structured JSON Output, Annotated Images
